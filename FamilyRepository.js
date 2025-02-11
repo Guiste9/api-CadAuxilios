@@ -21,7 +21,8 @@ class FamilyRepository {
           doc.data().address,
           doc.data().number,
           doc.data().children_name,
-          doc.data().children_age
+          doc.data().children_age,
+          doc.data().attendance
         )
     );
   }
@@ -35,12 +36,29 @@ class FamilyRepository {
       doc.data().address,
       doc.data().number,
       doc.data().children_name,
-      doc.data().children_age
+      doc.data().children_age,
+      doc.data().attendance
     );
   }
 
   async update(id, family) {
     await this.collection.doc(id).update(family.toJSON());
+    return true;
+  }
+
+  async addAttendance(id, date) {
+    const docRef = this.collection.doc(id);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      throw new Error("Família não encontrada");
+    }
+
+    // Atualiza o array de presenças sem duplicar a mesma data
+    await docRef.update({
+      attendance: [...new Set([...(doc.data().attendance || []), date])],
+    });
+
     return true;
   }
 
