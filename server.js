@@ -88,12 +88,12 @@ app.patch("/frequencias", async (req,res) =>{
     const {id} = req.body
     const today = new Date().toISOString().split("T")[0]
 
-    await familyRepository.addAttendance(id);
+    await familyRepository.addAttendance(id,today);
 
     res.json({ success: true})
 
   } catch (error) {
-    res.status(500).json({ error: "erro ao marcar frequencia", message: error.message})
+    res.status(500).json({ error: "erro ao marcar frequencia ", message: error.message})
   }
 });
 
